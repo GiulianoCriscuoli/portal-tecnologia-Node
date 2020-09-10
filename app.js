@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 //const mongoose = require('mongoose');
+const admin = require("./routes/admin");
 
 // configurações
 const app = express();
@@ -17,6 +18,12 @@ app.engine('handlebars', handlebars({ defaultLayout: 'main'})); // define a engi
 app.set('view engine', 'handlebars'); // setta a view engine e o outro parâmetro é o hanflebars
 
 //mongoose
+
+// rotas
+
+app.use('/admin', admin);
+
+
 
 const PORT = 8081;
 
