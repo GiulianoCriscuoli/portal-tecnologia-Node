@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
 
-    res.send("Home");
+    res.render("admin/index");
 
 });
 
@@ -15,7 +15,12 @@ router.get('/posts', (req, res) => {
 
 router.get('/categorias', (req, res) => {
 
-    res.send("Categorias");
+    res.render("admin/categories");
+});
+
+router.get('/categorias/add', (req, res) => {
+    res.render("admin/addCategories");
+
 });
 
 module.exports = router;
