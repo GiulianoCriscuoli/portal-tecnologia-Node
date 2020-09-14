@@ -18,8 +18,16 @@ router.get('/posts', (req, res) => {
 });
 
 router.get('/categorias', (req, res) => {
+  Categorie.find().then((categories) => {
+    res.render("admin/categories", { categories: categories.map(category => category.toJSON())
+    
+});
 
-    res.render("admin/categories");
+  }).catch(err => {
+    req.flash("error", "Houve um erro ao listar as categorias");
+    res.redirect("/admin");
+  });
+    
 });
 
 router.get('/categorias/add', (req, res) => {
@@ -29,19 +37,47 @@ router.get('/categorias/add', (req, res) => {
 
 router.post('/categorias/addAction', (req, res) => {
 
-   const newCategorie = {
-       name: req.body.name,
-       slug: req.body.slug
-    
-   }
+    let errors = [];
 
-   new Categorie(newCategorie).save().then(() => {
-    console.log("Categoria salva com sucesso!");
+    if(!req.body.name || typeof req.body.name === undefined || req.body.name === null) {
 
-   }).catch(err => {
-     console.error("Erro ao salvar a categoria!");
+        errors.push({ msgs: "O nome está vazio" });
 
-   });
+    }
+
+    if(req.body.name.length < 2 || req.body.name.length > 40) {
+
+        errors.push({ msgs: "O nome da categoria é menor que 2 ou maior que 40 caracteres" });
+    }
+
+    if(!req.body.slug || typeof req.body.slug === undefined || req.body.slug === null) {
+
+        errors.push({ msgs: "O slug está vazio" });
+    }
+
+    if(errors.length > 0) {
+        
+        res.render("admin/addCategories", { errors: errors });
+
+    } else {
+
+        const newCategorie = {
+            name: req.body.name,
+            slug: req.body.slug.toLowerCase()   
+        }
+     
+        new Categorie(newCategorie).save().then(() => {
+         req.flash("success", "Sucesso ao registrar uma nova categoria");
+         res.redirect("/admin/categorias");
+     
+        }).catch(err => {
+          req.flash("error", "Erro ao registrar, tente novamente");
+          res.redirect("/admin");
+     
+        });
+        
+    }
+ 
 });
 
 module.exports = router;

@@ -9,7 +9,8 @@ const Categorie = new Schema({
     },
     slug: {
         type: String,
-        require: true
+        require: true,
+        
     },
     date: {
         type: Date,
